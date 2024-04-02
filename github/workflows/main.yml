@@ -1,0 +1,21 @@
+name: Mel's CI/CD with Docker
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Frontend Docker image
+        run: docker build -t reactapp1 -f Dockerfile .
+
+      - name: Push Frontend Docker image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.melotsky777 }} --password-stdin
+          docker tag reactapp1 ${{ secrets.melotsky777 }}/reactapp1
+          docker push ${{ secrets.melotsky777 }}/reactapp1
